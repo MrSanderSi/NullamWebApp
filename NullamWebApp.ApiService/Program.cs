@@ -1,12 +1,16 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
+using NullamWebApp.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add service defaults & Aspire components.
 builder.AddServiceDefaults();
-
-builder.AddNpgsqlDbContext<>("nullamdb");
-
-// Add services to the container.
 builder.Services.AddProblemDetails();
+builder.Services.AddDbContext<NullamContext>(options =>
+{
+    options.UseSqlServer("Server=localhost;Database=NullamDb;Trusted_Connection=True;TrustServerCertificate=True");
+});
 
 var app = builder.Build();
 
