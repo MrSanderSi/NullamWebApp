@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NullamWebApp.Tests", "Nulla
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NullamWebApp.Data", "Data\NullamWebApp.Data.csproj", "{D46AE6F9-CEB8-49F8-B5F2-82139AC74DBD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NullamWebApp.Shared", "NullamWebApp.Shared\NullamWebApp.Shared.csproj", "{8FC166CC-E9C2-40C6-943C-477D80ED2652}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NullamWebApp.Shared", "NullamWebApp.Shared\NullamWebApp.Shared.csproj", "{8FC166CC-E9C2-40C6-943C-477D80ED2652}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,0 +1,36 @@
+﻿h3 {
+    background-color: dodgerblue;
+    text-align: center;
+    padding: 10px 0;
+}
+
+.event-instance {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+.first-item {
+    width: 50%;
+}
+
+p {
+    align-self: center;
+    margin-bottom: 0;
+}
+
+a {
+    align-self: center;
+    margin: 0;
+    padding: 0;
+}
+
+button {
+    border: none;
+    background-color: white;
+}
+
+img {
+    background-color: white;
+    width: 16px;
+    height: 16px;
+}

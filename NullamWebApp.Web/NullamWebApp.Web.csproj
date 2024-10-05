@@ -7,7 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Blazored.Toast" Version="4.2.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\NullamWebApp.ServiceDefaults\NullamWebApp.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\NullamWebApp.Shared\NullamWebApp.Shared.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,5 +1,7 @@
+using Blazored.Toast;
 using NullamWebApp.Web;
 using NullamWebApp.Web.Components;
+using NullamWebApp.Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,13 +12,16 @@ builder.AddServiceDefaults();
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+builder.Services.AddServerSideBlazor();
 builder.Services.AddOutputCache();
+builder.Services.AddBlazoredToast();
+builder.Services.AddScoped<EventService>();
 
-builder.Services.AddHttpClient<WeatherApiClient>(client =>
+builder.Services.AddHttpClient<NullamApiClient>(client =>
     {
         // This URL uses "https+http://" to indicate HTTPS is preferred over HTTP.
         // Learn more about service discovery scheme resolution at https://aka.ms/dotnet/sdschemes.
-        client.BaseAddress = new("https+http://apiservice");
+        client.BaseAddress = new("https+http://localhost:7456");
     });
 
 var app = builder.Build();

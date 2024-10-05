@@ -23,10 +23,31 @@ public class EventsController : ControllerBase
         return await _eventService.GetEventAsync(new GetEventRequest() { Id = id });
     }
 
-    [HttpGet("All")]
-    public async Task<EventListResponse> GetAll()
+    [HttpGet("All/Upcoming")]
+    public async Task<IActionResult> GetAllUpcoming()
     {
-        return await _eventService.GetAllEvents();
+        var result = await _eventService.GetAllUpcomingEvents();
+        
+        if (result.Response.Count > 0)
+        {
+            return Ok(result);
+        }
+
+        return NoContent();
+    }
+
+
+    [HttpGet("All/Past")]
+    public async Task<IActionResult> GetAllPast()
+    {
+        var result = await _eventService.GetAllPastEvents();
+
+        if (result.Response.Count > 0)
+        {
+            return Ok(result);
+        }
+
+        return NoContent();
     }
 
     [HttpPost]
@@ -42,8 +63,9 @@ public class EventsController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public async Task<ApiResponseMessage> DeleteAsync(DeleteEventRequest request)
+    public async Task<ApiResponseMessage> DeleteAsync(Guid id)
     {
+        var request = new DeleteEventRequest() { Id = id };
         return await _eventService.DeleteEventAsync(request);
     }
 }

@@ -43,7 +43,7 @@ public class AddEventService : ServiceBase
         return new SingleEventResponse() { ResponseMessage = "No event found with given ID", IsSuccess = false };
     }
 
-    public async Task<EventListResponse> GetAllEvents()
+    public async Task<EventListResponse> GetAllUpcomingEvents()
     {
         var upcomingEvents = await _db.Set<Event>()
             .Include(x => x.Participants)
@@ -62,10 +62,35 @@ public class AddEventService : ServiceBase
                     .Where(y => y.EventId == x.Id)
                     .Sum(x => x.ParticipantCount),
             })
-            .Take(1000)
+            .Take(100)
             .ToListAsync();
 
         return new EventListResponse() { Response = upcomingEvents };
+    }
+
+    public async Task<EventListResponse> GetAllPastEvents()
+    {
+        var pastEvents = await _db.Set<Event>()
+            .Include(x => x.Participants)
+            .Where(x => x.EventStarts <= DateTimeOffset.Now)
+            .OrderByDescending(x => x.EventStarts)
+            .Select(x => new EventResponse()
+            {
+                Id = x.Id,
+                EventName = x.EventName,
+                EventStart = x.EventStarts,
+                EventEnd = x.EventEnds,
+                Address = x.Address,
+                IsOnline = x.IsOnline,
+                AdditionalInfo = x.AdditionalInfo,
+                ParticipantCount = x.Participants
+                    .Where(y => y.EventId == x.Id)
+                    .Sum(x => x.ParticipantCount),
+            })
+            .Take(100)
+            .ToListAsync();
+
+        return new EventListResponse() { Response = pastEvents };
     }
 
     public async Task<ApiResponseMessage> AddEventAsync(AddEventRequest request)

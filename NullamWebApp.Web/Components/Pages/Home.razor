@@ -1,7 +1,24 @@
 ﻿@page "/"
+@using NullamWebApp.Web.Components.Home
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<div class="main-content">
+	<div class="explaining-section">
+		<p class="text-white">
+			Morbi nisi turpis, dignissim nec placerat a, ultrices aliquam est. Vivamus maximus non tellus vel imperdiet. Etiam fermentum ullamcorper magna a rhoncus. Pellentesque libero magna, egestas vel dictum id, iaculis vel neque. Curabitur mauris mi, condimentum in consectetur vel, commodo vitae urna. Maecenas gravida imperdiet libero, sed ullamcorper risus. Morbi vestibulum nulla non sodales efficitur. Mauris mollis ligula eget sodales aliquet. In in cursus orci. Duis a sapien vel lacus iaculis pellentesque. Curabitur venenatis arcu sapien, sed finibus ex dapibus sed. Integer luctus fermentum faucibus. Maecenas eget euismod sapien. Fusce sapien justo, finibus in massa vel, consectetur maximus est. Aliquam erat volutpat.
+		</p>
+		<img src="images/pilt.jpg" />
+	</div>
 
-Welcome to your new app.
+	<div class="events-section">
+		<div class="upcoming-events">
+			<UpcomingEvents
+				Events=@UpcomingEvents />
+		</div>
+		<div class="past-events">
+			<PastEvents
+				Events="@PastEvents" />
+		</div>
+	</div>
+</div>
