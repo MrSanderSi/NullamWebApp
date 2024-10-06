@@ -1,0 +1,120 @@
+﻿@page "/eventdetails/{eventId:Guid}"
+<div class="component-header">
+	<h3>
+		Osavõtjad
+	</h3>
+	<div class="image-container">
+		<img src="images/libled.jpg" />
+	</div>
+</div>
+
+@if (EventWithParticipants != null && !ParticipantViewActive)
+{
+	<div class="sections">
+		<div class="section">
+			<div class="section-header">
+				<h4>Üritus</h4>
+			</div>
+			<table class="event-description">
+				<tr>
+					<td>Ürituse nimi:</td>
+					<td>@EventWithParticipants.Event.EventName</td>
+				</tr>
+				<tr>
+					<td>Toimumisaeg:</td>
+					<td>@EventWithParticipants.Event.EventStart.ToString("dd.MM.yyyy")</td>
+				</tr>
+				<tr>
+					<td>Koht:</td>
+					<td>@(EventWithParticipants.Event.Address?.FullAddress ?? "-")</td>
+				</tr>
+			</table>
+		</div>
+
+		<div class="section">
+			<div class="section-header">
+				<h4>Osavõtjad</h4>
+			</div>
+			<table>
+				@{
+					var counter = 0;
+					if (EventWithParticipants.ParticipantPeople != null)
+					{
+						@foreach (var person in EventWithParticipants.ParticipantPeople)
+						{
+							++counter;
+							<tr>
+								<td class="stretched">@(counter.ToString() + ". " + person.FirstName + " " + person.LastName)</td>
+								<td class="stretched">@person.IdCode</td>
+								<td class="stretched" @onclick="() => TriggerSelectedPerson(person)">VAATA</td>
+								<td class="stretched"><a @onclick="() => DeleteParticipantPersonAsync(person)">KUSTUTA</a></td>
+							</tr>
+						}
+					}
+
+					if (EventWithParticipants?.ParticipantCompanies != null)
+					{
+						@foreach (var company in EventWithParticipants.ParticipantCompanies)
+						{
+							++counter;
+							<tr>
+								<td class="stretched">@(counter.ToString() + ". " + company.CompanyName)</td>
+								<td class="stretched">@company.CompanyRegistryCode</td>
+								<td class="stretched" @onclick="() => TriggerSelectedCompany(company)">VAATA</td>
+								<td class="stretched"><a @onclick="() => DeleteParticipantCompanyAsync(company)">KUSTUTA</a></td>
+							</tr>
+						}
+					}
+				}
+			</table>
+		</div>
+
+		@* TODO: Osaleja lisamise sektsioon
+
+		<div class="section">
+			<div class="section-header">
+				<h4>
+					Osavõtjate lisamine
+				</h4>
+			</div>
+			<table>
+				<tr>
+					<td></td>
+					<td>
+						<div>
+							<input type="radio" id="Person" name="userType" @bind-value="SelectedOption" />
+							<label for="Person">Eraisik</label>
+						</div>
+						<div>
+							<input type="radio" id="Company" name="userType" @bind-value="SelectedOption" />
+							<label for="Company">Ettevõte</label>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					@if (SelectedOption == UserType.Person)
+					{
+						<td>Eraisik</td>
+					}
+					else if (SelectedOption == UserType.Company)
+					{
+						<td>Ettevõte</td>
+					}
+				</tr>
+			</table>
+		</div>
+
+		*@
+	</div>
+}
+@if (ParticipantViewActive && SelectedPerson != null)
+{
+	<CascadingValue Value="SelectedPerson">
+		<SelectedPersonView />
+	</CascadingValue>
+}else if (ParticipantViewActive && SelectedCompany != null)
+{
+	<CascadingValue Value = "SelectedCompany">
+		<SelectedCompanyView />
+	</CascadingValue>
+}

@@ -12,9 +12,9 @@ namespace NullamWebApp.ApiService.Controllers
     [ApiController]
     public class ParticipantsController : ControllerBase
     {
-        private readonly AddParticipantService _participantService;
+        private readonly ParticipantService _participantService;
 
-        public ParticipantsController(AddParticipantService participantService)
+        public ParticipantsController(ParticipantService participantService)
         {
             _participantService = participantService;
         }

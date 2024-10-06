@@ -12,8 +12,8 @@ builder.Services.AddDbContext<NullamDbContext>(options =>
     options.UseSqlServer("Server=localhost;Database=NullamDb;Trusted_Connection=True;TrustServerCertificate=True");
 });
 
-builder.Services.AddScoped<AddEventService>();
-builder.Services.AddScoped<AddParticipantService>();
+builder.Services.AddScoped<EventService>();
+builder.Services.AddScoped<ParticipantService>();
 
 builder.Services.AddControllers();
 

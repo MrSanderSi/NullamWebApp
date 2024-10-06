@@ -7,11 +7,11 @@ using NullamWebApp.Data.Models;
 
 namespace NullamWebApp.ApiService.Services;
 
-public class AddParticipantService : ServiceBase
+public class ParticipantService : ServiceBase
 {
     private readonly NullamDbContext _db;
 
-    public AddParticipantService(NullamDbContext db)
+    public ParticipantService(NullamDbContext db)
     {
         _db = db;
     }

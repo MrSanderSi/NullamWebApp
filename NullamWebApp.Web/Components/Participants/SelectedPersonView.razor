@@ -1,0 +1,37 @@
+﻿@using NullamWebApp.Shared.Enums
+<div class="input-row">
+	<label>
+		Eesnimi:
+	</label>
+	<input @bind="SelectedPerson.FirstName" placeholder="Eesnimi" />
+</div><div class="input-row">
+	<label>
+		Perenimi:
+	</label>
+	<input @bind="SelectedPerson.LastName" placeholder="Perenimi" />
+</div>
+<div class="input-row">
+	<label>
+		Isikukood:
+	</label>
+	<input @bind="SelectedPerson.IdCode" placeholder="Isikukood" />
+</div>
+<div class="input-row">
+	<label>
+		Maksmisviis:
+	</label>
+	<select @bind="SelectedPerson.PaymentType">
+		<option value="@PaymentType.Cash">
+			Sularaha
+		</option>
+		<option value="@PaymentType.BankTransfer">
+			Ülekanne
+		</option>
+	</select>
+</div>
+<div class="input-row">
+	<label>
+		Ettevõtte registrikood:
+	</label>
+	<input @bind="SelectedPerson.AdditionalInfo" placeholder="Info korraldajale, täpsustused" />
+</div>

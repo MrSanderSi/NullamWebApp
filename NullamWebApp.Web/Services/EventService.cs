@@ -22,7 +22,13 @@ public class EventService
         return await _apiClient.GetPastEventListAsync();
     }
 
-    public async Task<ApiResponseMessage> DeleteEventAsync(Guid id)
+    public async Task<EventResponseWithParticipants> GetEventWithParticipantsAsync(Guid id)
+    {
+        return await _apiClient.GetEventWithParticipantsAsync(id);
+	}
+
+
+	public async Task<ApiResponseMessage> DeleteEventAsync(Guid id)
     {
         return await _apiClient.DeleteEventAsync(id);
     }

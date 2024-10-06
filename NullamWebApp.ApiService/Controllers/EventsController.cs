@@ -11,8 +11,8 @@ namespace NullamWebApp.ApiService.Controllers;
 [ApiController]
 public class EventsController : ControllerBase
 {
-    private readonly AddEventService _eventService;
-    public EventsController(AddEventService eventService)
+    private readonly EventService _eventService;
+    public EventsController(EventService eventService)
     {
         _eventService = eventService;
     }
@@ -21,6 +21,12 @@ public class EventsController : ControllerBase
     public async Task<SingleEventResponse> GetAsync(Guid id)
     {
         return await _eventService.GetEventAsync(new GetEventRequest() { Id = id });
+    }
+
+    [HttpGet("WithParticipants/{id}")]
+    public async Task<EventWithParticipantsResponse> GetEventWithParticipantsAsync(Guid id)
+    {
+        return await _eventService.GetEventWithParticipantsAsync(new GetEventRequest() { Id = id });
     }
 
     [HttpGet("All/Upcoming")]

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using NullamWebApp.ApiService.Models;
 using NullamWebApp.ApiService.Models.Request;
 using NullamWebApp.ApiService.Models.Response;
 using NullamWebApp.Data;
@@ -7,11 +8,11 @@ using NullamWebApp.Shared.Models;
 
 namespace NullamWebApp.ApiService.Services;
 
-public class AddEventService : ServiceBase
+public class EventService : ServiceBase
 {
     private readonly NullamDbContext _db;
 
-    public AddEventService(NullamDbContext db)
+    public EventService(NullamDbContext db)
     {
         _db = db;
     }
@@ -43,7 +44,72 @@ public class AddEventService : ServiceBase
         return new SingleEventResponse() { ResponseMessage = "No event found with given ID", IsSuccess = false };
     }
 
-    public async Task<EventListResponse> GetAllUpcomingEvents()
+    public async Task<EventWithParticipantsResponse> GetEventWithParticipantsAsync(GetEventRequest request)
+    {
+        var match = await _db.Set<Event>()
+			.Where(x => x.Id == request.Id)
+			.Include(x => x.Participants)
+				.ThenInclude(x => x.Person)
+			.Include(x => x.Participants)
+				.ThenInclude(x => x.Company)
+            .Include(x => x.Address)
+			.FirstOrDefaultAsync();
+
+        if (match != null)
+        {
+            var result = new EventWithParticipantsResponse()
+            {
+                Event = new EventResponse()
+                {
+                    EventName = match.EventName,
+                    EventStart = match.EventStarts,
+                    EventEnd = match.EventEnds,
+                    AdditionalInfo = match.AdditionalInfo,
+                    Address = match.Address,
+                    IsOnline = match.IsOnline,
+                    ParticipantCount = match.Participants?.Count() ?? 0
+                }
+            };
+
+			if (match.Participants != null)
+			{
+				foreach (var participant in match.Participants)
+				{
+					if (participant.ParticipantPersonId != null)
+					{
+						var person = participant.Person;
+
+						result.ParticipantPeople.Add(new ParticipantPersonResponse()
+						{
+							FirstName = person.FirstName,
+							LastName = person.LastName,
+							IdCode = person.IdCode,
+							AdditionalInfo = participant.AdditionalInfo,
+							PaymentType = participant.PaymentType
+						});
+					}
+					else if (participant.ParticipantCompanyId != null)
+					{
+						var company = participant.Company;
+						result.ParticipantCompanys.Add(new ParticipantCompanyResponse()
+						{
+							CompanyName = company.CompanyName,
+							CompanyRegistryCode = company.RegistryCode,
+							AmountOfParticipants = participant.ParticipantCount,
+							AdditionalInfo = participant.AdditionalInfo,
+							PaymentType = participant.PaymentType
+						});
+					}
+				}
+			}
+
+			return result;
+		}
+
+        return new EventWithParticipantsResponse() { IsSuccess = false, ResponseMessage = "Event no longer exists in database"};
+    }
+
+	public async Task<EventListResponse> GetAllUpcomingEvents()
     {
         var upcomingEvents = await _db.Set<Event>()
             .Include(x => x.Participants)
