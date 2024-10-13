@@ -1,37 +1,49 @@
 ﻿@using NullamWebApp.Shared.Enums
-<div class="input-row">
-	<label>
-		Eesnimi:
-	</label>
-	<input @bind="SelectedPerson.FirstName" placeholder="Eesnimi" />
-</div><div class="input-row">
-	<label>
-		Perenimi:
-	</label>
-	<input @bind="SelectedPerson.LastName" placeholder="Perenimi" />
-</div>
-<div class="input-row">
-	<label>
-		Isikukood:
-	</label>
-	<input @bind="SelectedPerson.IdCode" placeholder="Isikukood" />
-</div>
-<div class="input-row">
-	<label>
-		Maksmisviis:
-	</label>
-	<select @bind="SelectedPerson.PaymentType">
-		<option value="@PaymentType.Cash">
-			Sularaha
-		</option>
-		<option value="@PaymentType.BankTransfer">
-			Ülekanne
-		</option>
-	</select>
-</div>
-<div class="input-row">
-	<label>
-		Ettevõtte registrikood:
-	</label>
-	<input @bind="SelectedPerson.AdditionalInfo" placeholder="Info korraldajale, täpsustused" />
+
+<div class="participant-edit-section">
+	<div class="input-row">
+		<label>
+			Eesnimi:
+		</label>
+		<input class="custom-border" @bind="SelectedPerson.FirstName" placeholder="Eesnimi" />
+	</div><div class="input-row">
+		<label>
+			Perenimi:
+		</label>
+		<input class="custom-border" @bind="SelectedPerson.LastName" placeholder="Perenimi" />
+	</div>
+	<div class="input-row">
+		<label>
+			Isikukood:
+		</label>
+		<input class="custom-border" @bind="SelectedPerson.IdCode" placeholder="Isikukood" />
+	</div>
+	<div class="input-row">
+		<label>
+			Maksmisviis:
+		</label>
+		<select class="custom-border" @bind="SelectedPerson.PaymentType">
+			<option value="@PaymentType.Cash">
+				Sularaha
+			</option>
+			<option value="@PaymentType.BankTransfer">
+				Ülekanne
+			</option>
+		</select>
+	</div>
+	<div class="input-row">
+		<label>
+			Lisainfo:
+		</label>
+		<textarea
+			class="custom-border"
+			@bind="SelectedPerson.AdditionalInfo"
+			placeholder="Info korraldajale, täpsustused" />
+	</div>
+
+
+	<div class="button-row">
+		<a @onclick="NavigateBack" class="button-secondary">Tagasi</a>
+		<button @onclick="SaveChangesAsync" class="button-primary">Salvesta</button>
+	</div>
 </div>

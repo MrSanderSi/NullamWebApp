@@ -56,7 +56,7 @@ public class EventsController : ControllerBase
         return NoContent();
     }
 
-    [HttpPost]
+    [HttpPost("AddEvent")]
     public async Task<ApiResponseMessage> PostAsync(AddEventRequest value)
     {
         return await _eventService.AddEventAsync(value);
@@ -68,10 +68,22 @@ public class EventsController : ControllerBase
         return await _eventService.EditEventAsync(request);
     }
 
+    [HttpPut("AddParticipant")]
+    public async Task<ApiResponseMessage> EditEventParticipantAsync(AddParticipantRequest request)
+    {
+        return await _eventService.AddParticipantToEventAsync(request);
+    }
+
     [HttpDelete("{id}")]
     public async Task<ApiResponseMessage> DeleteAsync(Guid id)
     {
         var request = new DeleteEventRequest() { Id = id };
         return await _eventService.DeleteEventAsync(request);
+    }
+
+    [HttpDelete("DeleteParticipantFromEvent/{id}")]
+    public async Task<ApiResponseMessage> DeleteParticipantFromEventASync(RemoveParticipantFromEventRequest request)
+    {
+        return await _eventService.DeleteParticipantFromEventAsync(request);
     }
 }

@@ -15,8 +15,4 @@
     <ProjectReference Include="..\NullamWebApp.Shared\NullamWebApp.Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Models\ApiRequestModels\" />
-  </ItemGroup>
-
 </Project>

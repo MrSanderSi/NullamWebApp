@@ -13,8 +13,13 @@ public partial class EventDetailView : ComponentBase
 	[Inject]
 	public ParticipantService ParticipantService { get; set; }
 
+	[Inject]
+	public NavigationManager NavigationManager { get; set; }
+
 	[Parameter]
 	public string EventId { get; set; }
+
+	private bool CanModify { get; set; }
 
 	public EventResponseWithParticipants EventWithParticipants { get; set; }
 	public bool ParticipantViewActive { get; set; }
@@ -33,6 +38,7 @@ public partial class EventDetailView : ComponentBase
 			if (response.IsSuccess)
 			{
 				EventWithParticipants = response;
+				CanModify = response.CanModifyParticipants ?? false;
 			}
 		}
 
@@ -41,11 +47,35 @@ public partial class EventDetailView : ComponentBase
 
 	public async Task DeleteParticipantPersonAsync(ParticipantPerson person)
 	{
+		var result = await EventService.DeleteParticipantPersonFromEvent(Guid.Parse(EventId), person);
 
+		if (result.IsSuccess)
+		{
+			StateHasChanged();
+		}
 	}
 
-	public void TriggerChangeState()
+	public async Task DeleteParticipantCompanyAsync(ParticipantCompany company)
 	{
+		var result = await EventService.DeleteParticipantCompanyFromEvent(Guid.Parse(EventId), company);
+
+		if (result.IsSuccess)
+		{
+			StateHasChanged();
+		}
+	}
+
+	public void ChoosePerson()
+	{
+		SelectedOption = UserType.Person;
+		SelectedPerson = new SelectedPerson() { FirstName = string.Empty, LastName = string.Empty, IdCode = int.MaxValue };
+		StateHasChanged();
+	}
+
+	public void ChooseCompany()
+	{
+		SelectedOption = UserType.Company;
+		SelectedCompany = new SelectedCompany() { CompanyName = string.Empty, CompanyRegistryCode = int.MaxValue, AmountOfParticipants = int.MaxValue };
 		StateHasChanged();
 	}
 
@@ -67,6 +97,7 @@ public partial class EventDetailView : ComponentBase
 
 		SelectedCompany = null;
 		ParticipantViewActive = true;
+
 		StateHasChanged();
 	}
 
@@ -89,6 +120,7 @@ public partial class EventDetailView : ComponentBase
 
 		SelectedPerson = null;
 		ParticipantViewActive = true;
+
 		StateHasChanged();
 	}
 }
