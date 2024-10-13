@@ -7,12 +7,17 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NullamWebApp.ServiceDefaults", "NullamWebApp.ServiceDefaults\NullamWebApp.ServiceDefaults.csproj", "{79F1E966-5D2D-46CB-A072-DAD286662648}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NullamWebApp.ApiService", "NullamWebApp.ApiService\NullamWebApp.ApiService.csproj", "{34D8532C-FE43-49AE-B239-C2177B7B0FD4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{8FC166CC-E9C2-40C6-943C-477D80ED2652} = {8FC166CC-E9C2-40C6-943C-477D80ED2652}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NullamWebApp.Web", "NullamWebApp.Web\NullamWebApp.Web.csproj", "{F66BD10E-69FA-4550-80A2-B4F500BA0658}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NullamWebApp.Tests", "NullamWebApp.Tests\NullamWebApp.Tests.csproj", "{2F5D0776-BF41-4418-82D2-AF4B2096DBF3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NullamWebApp.Data", "Data\NullamWebApp.Data.csproj", "{D46AE6F9-CEB8-49F8-B5F2-82139AC74DBD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NullamWebApp.Data", "Data\NullamWebApp.Data.csproj", "{D46AE6F9-CEB8-49F8-B5F2-82139AC74DBD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NullamWebApp.Shared", "NullamWebApp.Shared\NullamWebApp.Shared.csproj", "{8FC166CC-E9C2-40C6-943C-477D80ED2652}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -44,6 +49,10 @@ Global
 		{D46AE6F9-CEB8-49F8-B5F2-82139AC74DBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D46AE6F9-CEB8-49F8-B5F2-82139AC74DBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D46AE6F9-CEB8-49F8-B5F2-82139AC74DBD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8FC166CC-E9C2-40C6-943C-477D80ED2652}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8FC166CC-E9C2-40C6-943C-477D80ED2652}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8FC166CC-E9C2-40C6-943C-477D80ED2652}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8FC166CC-E9C2-40C6-943C-477D80ED2652}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,26 @@
+﻿<h3 class="text-white">
+	@Title
+</h3>
+
+@if (Events != null)
+{
+	for (int i = 0; i < Events.Count(); i++)
+	{
+		var eventInstance = Events[i];
+
+		<div class="event-instance">
+			<p class="first-item">@($"{i+1}. {eventInstance.EventName}")</p>
+			<p>@eventInstance.EventStart.ToString("dd.MM.yyyy")</p>
+			<NavLink class="nav-link" href="@($"/eventdetails/{eventInstance.Id}")">
+				<span class="bi bi-house-door-fill" aria-hidden="true">OSAVÕTJAD</span>
+			</NavLink>
+
+			@if (CanDelete)
+			{
+				<button @onclick="() => RemoveEventAsync(eventInstance.Id)">
+					<img src="svg/remove.svg" />
+				</button>
+			}
+		</div>
+	}
+}

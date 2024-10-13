@@ -1,0 +1,49 @@
+﻿@using NullamWebApp.Shared.Enums
+
+<div class="company-edit-section"
+	<div class="input-row">
+		<label>
+			Ettevõtte nimi:
+		</label>
+		<input class="custom-border" @bind="SelectedCompany.CompanyName" placeholder="Nimi" />
+	</div>
+	<div class="input-row">
+		<label>
+			Ettevõtte registrikood:
+		</label>
+		<input class="custom-border" @bind="SelectedCompany.CompanyRegistryCode" placeholder="Registrikood" />
+	</div>
+	<div class="input-row">
+		<label>
+			Osalejate arv:
+		</label>
+		<input class="custom-border" @bind="SelectedCompany.AmountOfParticipants" placeholder="osalejate arv" />
+	</div>
+	<div class="input-row">
+		<label>
+			Maksmisviis:
+		</label>
+		<select class="custom-border" @bind="SelectedCompany.PaymentType">
+			<option value="@PaymentType.Cash">
+				Sularaha
+			</option>
+			<option value="@PaymentType.BankTransfer">
+				Ülekanne
+			</option>
+		</select>
+	</div>
+	<div class="input-row">
+		<label>
+			Lisainfo:
+		</label>
+		<textarea
+			class="custom-border"
+			@bind="SelectedCompany.AdditionalInfo"
+			placeholder="Info korraldajale, täpsustused" />
+	</div>
+
+	<div class="button-row">
+		<a @onclick="NavigateBack" class="button-secondary">Tagasi</a>
+		<button @onclick="SaveChangesAsync" class="button-primary">Salvesta</button>
+	</div>
+</div>

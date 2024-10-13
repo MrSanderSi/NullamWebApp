@@ -1,0 +1,133 @@
+﻿@page "/eventdetails/{eventId:Guid}"
+
+<CascadingValue Value="@(Guid.Parse(EventId))">
+@if (EventWithParticipants != null && !ParticipantViewActive)
+{
+	<div class="component-header">
+		<h3>
+			Osavõtjad
+		</h3>
+		<div class="image-container">
+			<img src="images/libled.jpg" />
+		</div>
+	</div>
+
+	<div class="sections">
+		<div class="section">
+			<div class="section-header">
+				<h4>Üritus</h4>
+			</div>
+			<table class="event-description">
+				<tr>
+					<td>Ürituse nimi:</td>
+					<td>@EventWithParticipants.Event.EventName</td>
+				</tr>
+				<tr>
+					<td>Toimumisaeg:</td>
+					<td>@EventWithParticipants.Event.EventStart.ToString("dd.MM.yyyy")</td>
+				</tr>
+				<tr>
+					<td>Koht:</td>
+					<td>@(EventWithParticipants.Event.Address?.FullAddress ?? "-")</td>
+				</tr>
+			</table>
+		</div>
+
+		<div class="section">
+			<div class="section-header">
+				<h4>Osavõtjad</h4>
+			</div>
+			<table>
+				@{
+					var counter = 0;
+					if (EventWithParticipants.ParticipantPeople != null)
+					{
+						@foreach (var person in EventWithParticipants.ParticipantPeople)
+						{
+							++counter;
+							<tr>
+								<td class="stretched">@(counter.ToString() + ". " + person.FirstName + " " + person.LastName)</td>
+								<td class="stretched">@person.IdCode</td>
+
+								@if (CanModify)
+								{
+									<td class="stretched pointer-cursor" @onclick="() => TriggerSelectedPerson(person)">VAATA</td>
+									<td class="stretched pointer-cursor"><a @onclick="() => DeleteParticipantPersonAsync(person)">KUSTUTA</a></td>
+								}
+							</tr>
+						}
+					}
+
+					if (EventWithParticipants?.ParticipantCompanies != null)
+					{
+						@foreach (var company in EventWithParticipants.ParticipantCompanies)
+						{
+							++counter;
+							<tr>
+								<td class="stretched">@(counter.ToString() + ". " + company.CompanyName)</td>
+								<td class="stretched">@company.CompanyRegistryCode</td>
+
+								@if (CanModify)
+								{
+									<td class="stretched pointer-cursor" @onclick="() => TriggerSelectedCompany(company)">VAATA</td>
+									<td class="stretched pointer-cursor"><a @onclick="() => DeleteParticipantCompanyAsync(company)">KUSTUTA</a></td>
+								}
+							</tr>
+						}
+					}
+				}
+			</table>
+		</div>
+
+		@if (CanModify)
+		{
+			<div class="section">
+				<div class="section-header">
+					<h4>
+						Osavõtjate lisamine
+					</h4>
+				</div>
+				<table>
+					<tr>
+						<div class="radio-section">
+							<td class="spacer"></td>
+							<td class="radio-choice">
+								<div>
+									<input type="radio" id="Person" name="userType" @onclick="ChoosePerson" checked />
+									<label for="Person">Eraisik</label>
+								</div>
+								<div>
+									<input type="radio" id="Company" name="userType" @onclick="ChooseCompany" />
+									<label for="Company">Ettevõte</label>
+								</div>
+							</td>
+						</div>
+					</tr>
+					<tr>
+						@if (SelectedOption == UserType.Person)
+						{
+						<SelectedPersonView />
+						}
+						else if (SelectedOption == UserType.Company)
+						{
+						<SelectedCompanyView />
+						}
+					</tr>
+				</table>
+			</div>
+		}
+	</div>
+}
+
+@if (ParticipantViewActive && SelectedPerson != null)
+{
+	<CascadingValue Value="SelectedPerson">
+		<EditPersonView />
+	</CascadingValue>
+}else if (ParticipantViewActive && SelectedCompany != null)
+{
+	<CascadingValue Value = "SelectedCompany">
+		<EditCompanyView />
+	</CascadingValue>
+}
+</CascadingValue>

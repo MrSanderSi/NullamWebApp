@@ -6,6 +6,7 @@
 
 main {
     flex: 1;
+    background-color: white;
 }
 
 .sidebar {
@@ -48,7 +49,7 @@ main {
 
 @media (min-width: 641px) {
     .page {
-        flex-direction: row;
+        flex-direction: column;
     }
 
     .sidebar {

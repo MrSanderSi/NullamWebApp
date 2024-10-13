@@ -1,0 +1,46 @@
+﻿@page "/newevent"
+
+<div class="new-event">
+	<div class="component-header">
+		<h3>
+			Ürituse lisamine
+		</h3>
+		<div class="image-container">
+			<img src="images/libled.jpg" />
+		</div>
+	</div>
+	<div class="event-edit-section">
+		<div class="input-row">
+			<label>
+				Ürituse nimi:
+			</label>
+			<input class="custom-border" @bind="NewEvent.EventName" />
+		</div>
+		<div class="input-row">
+			<label>
+				Toimumisaeg:
+			</label>
+			<input type="datetime" class="custom-border" @bind="NewEvent.StartDateTime" placeholder="kk/pp/aaaa hh:mm" />
+		</div>
+		<div class="input-row">
+			<label>
+				Koht:
+			</label>
+			<input class="custom-border" @bind="NewEvent.Address" />
+		</div>
+		<div class="input-row">
+			<label>
+				Lisainfo:
+			</label>
+			<textarea class="custom-border"
+					  @bind="NewEvent.AdditionalInfo"
+					  placeholder="Info korraldajale, täpsustused" />
+		</div>
+
+
+		<div class="button-row">
+			<a @onclick="NavigateBack" class="button-secondary">Tagasi</a>
+			<button @onclick="SaveChangesAsync" class="button-primary">Lisa</button>
+		</div>
+	</div>
+</div>
