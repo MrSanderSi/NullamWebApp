@@ -6,6 +6,15 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add service defaults & Aspire components.
 builder.AddServiceDefaults();
+
+builder.Services.AddCors(options =>
+{
+	options.AddPolicy("AllowAll", builder =>
+		builder.AllowAnyOrigin()
+		.AllowAnyMethod()
+		.AllowAnyHeader());
+});
+
 builder.Services.AddProblemDetails();
 builder.Services.AddDbContext<NullamDbContext>(options =>
 {
@@ -30,7 +39,7 @@ if (app.Environment.IsDevelopment())
 
 // Configure the HTTP request pipeline.
 app.UseExceptionHandler();
-
+app.UseCors("AllowAll");
 app.MapDefaultEndpoints();
 
 app.MapControllers();

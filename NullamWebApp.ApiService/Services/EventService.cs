@@ -81,6 +81,7 @@ public class EventService : ServiceBase
 
 						result.ParticipantPeople.Add(new ParticipantPersonResponse()
 						{
+							Id = person.Id,
 							FirstName = person.FirstName,
 							LastName = person.LastName,
 							IdCode = person.IdCode,
@@ -91,8 +92,9 @@ public class EventService : ServiceBase
 					else if (participant.ParticipantCompanyId != null)
 					{
 						var company = participant.Company;
-						result.ParticipantCompanys.Add(new ParticipantCompanyResponse()
+						result.ParticipantCompanies.Add(new ParticipantCompanyResponse()
 						{
+							Id = company.Id,
 							CompanyName = company.CompanyName,
 							CompanyRegistryCode = company.RegistryCode,
 							AmountOfParticipants = participant.ParticipantCount,
@@ -178,13 +180,119 @@ public class EventService : ServiceBase
 
         if (existsInDatabase)
         {
-            return new ApiResponseMessage("Üritus on juba andmebaasi registreeritud!");
+            return new ApiResponseMessage(isSuccess: false, "Üritus on juba andmebaasi registreeritud!");
         }
 
         await _db.AddAsync(addEvent);
         await _db.SaveChangesAsync();
 
         return new ApiResponseMessage(isSuccess: true, "Ürituse lisamine andmebaasi õnnestus!");
+    }
+
+    public async Task<ApiResponseMessage> AddParticipantToEventAsync(AddParticipantRequest request)
+    {
+        var participantEvent = await _db.Set<Event>().Where(x => x.Id == request.EventId).FirstOrDefaultAsync();
+        if(participantEvent == null)
+        {
+            return new ApiResponseMessage(isSuccess: false, "Antud üritust ei leitud!");
+        }
+
+        // Participant exists in database
+        if(request.Id != null)
+        {
+            if(request.PersonDto != null)
+            {
+                var personToModify = await _db.Set<ParticipantPerson>().FirstOrDefaultAsync(x => x.Id == request.Id);
+
+                if(personToModify == null)
+                {
+                    return new ApiResponseMessage(isSuccess: false, "Osaleja ledmine andmebaasist ebaõnnestus!");
+                }
+
+                personToModify.FirstName = request.PersonDto.FirstName;
+                personToModify.LastName = request.PersonDto.LastName;
+                personToModify.IdCode = request.PersonDto.IdCode;
+
+                var participantEntry = await _db.Set<ParticipantEntry>()
+                    .FirstOrDefaultAsync(x => x.ParticipantPersonId == personToModify.Id && x.EventId == participantEvent.Id);
+
+                await _db.SaveChangesAsync();
+            }
+            else
+            {
+                var companyToModify = await _db.Set<ParticipantCompany>().FirstOrDefaultAsync(x => x.Id == request.Id);
+
+                if(companyToModify == null)
+                {
+                    return new ApiResponseMessage(isSuccess: false, "Osaleja leidmine andmebaasist ebaõnnestus!");
+                }
+
+                companyToModify.CompanyName = request.CompanyDto.CompanyName;
+                companyToModify.RegistryCode = request.CompanyDto.CompanyRegistryCode;
+
+                var participantEntry = await _db.Set<ParticipantEntry>()
+                    .FirstOrDefaultAsync(x => x.ParticipantCompanyId == companyToModify.Id && x.EventId == request.EventId);
+
+                if(participantEntry == null)
+                {
+                    await _db.AddAsync(new ParticipantEntry() { Event = participantEvent, ParticipantCount = request.CompanyDto.AmountOfParticipants, ParticipantCompanyId = companyToModify.Id });
+				}
+
+                participantEntry.ParticipantCount = request.CompanyDto.AmountOfParticipants;
+
+                await _db.SaveChangesAsync();
+			}
+        }
+        else
+        {
+            if(request.PersonDto != null)
+            {
+                var personToAdd = request.PersonDto;
+                ParticipantPerson newPerson = new()
+                {
+                    Id = Guid.NewGuid(),
+                    FirstName = personToAdd.FirstName,
+                    LastName = personToAdd.LastName,
+                    IdCode = personToAdd.IdCode,
+
+                };
+
+                await _db.AddAsync(newPerson);
+                await _db.AddAsync(new ParticipantEntry()
+                {
+                    Event = participantEvent,
+                    ParticipantPersonId = newPerson.Id,
+                    PaymentType = request.PaymentType,
+                    AdditionalInfo = request.PersonDto.AdditionalInfo,
+                    ParticipantCount = 1
+                });
+                await _db.SaveChangesAsync();
+			}
+            else
+            {
+                var companyToAdd = request.CompanyDto;
+                ParticipantCompany newCompany = new()
+                {
+                    Id = Guid.NewGuid(),
+                    CompanyName = companyToAdd.CompanyName,
+                    RegistryCode = companyToAdd.CompanyRegistryCode,
+                };
+
+                await _db.AddAsync(newCompany);
+                await _db.AddAsync(new ParticipantEntry()
+                {
+                    Event = participantEvent,
+                    ParticipantCompanyId = newCompany.Id,
+                    PaymentType = request.PaymentType,
+                    AdditionalInfo = request.CompanyDto.AdditionalInfo,
+                    ParticipantCount = request.CompanyDto.AmountOfParticipants
+                });
+
+                await _db.SaveChangesAsync();
+            }
+        }
+
+        return new ApiResponseMessage("Osaleja lisamine õnnestus!");
     }
 
     public async Task<ApiResponseMessage> DeleteEventAsync(DeleteEventRequest request)
@@ -201,7 +309,46 @@ public class EventService : ServiceBase
         return new ApiResponseMessage("Üritus edukalt andmebaasist eemaldatud");
     }
 
-    public async Task<ApiResponseMessage> EditEventAsync(EditEventRequest request)
+    public async Task<ApiResponseMessage> DeleteParticipantFromEventAsync(RemoveParticipantFromEventRequest request)
+    {
+        if(request.ParticipantPerson != null)
+        {
+            var entry = await _db.Set<ParticipantPerson>()
+                .Include(x => x.ParticipantEntry)
+                .Where(x => x.Id == request.ParticipantId)
+                .Select(x => x.ParticipantEntry.FirstOrDefault(x => x.EventId == request.EventId))
+                .FirstOrDefaultAsync();
+
+            if(entry == null)
+            {
+                return new ApiResponseMessage(isSuccess: false, "Isiku eemaldamine ürituselt ebaõnnestus");
+            }
+
+            _db.Remove(entry);
+            await _db.SaveChangesAsync();
+        }
+        else
+        {
+            var entry = await _db.Set<ParticipantCompany>()
+				.Include(x => x.ParticipantEntry)
+				.Where(x => x.Id == request.ParticipantId)
+				.Select(x => x.ParticipantEntry.FirstOrDefault(x => x.EventId == request.EventId))
+				.FirstOrDefaultAsync();
+
+            if (entry == null)
+            {
+                return new ApiResponseMessage(isSuccess: false, "Ettevõtte eemaldamine ürituselt ebaõnnestus");
+            }
+
+            _db.Remove(entry);
+            await _db.SaveChangesAsync();
+		}
+
+        return new ApiResponseMessage("Participant removed successfully");
+    }
+
+
+	public async Task<ApiResponseMessage> EditEventAsync(EditEventRequest request)
     {
         var match = await _db.Set<Event>().FirstOrDefaultAsync(x => x.Id == request.EventId);
 

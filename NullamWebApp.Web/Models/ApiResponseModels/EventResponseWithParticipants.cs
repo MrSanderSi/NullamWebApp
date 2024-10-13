@@ -9,4 +9,6 @@ public class EventResponseWithParticipants
 
 	public bool IsSuccess { get; set; }
 	public string? ResponseMessage { get; set; }
+
+	public bool? CanModifyParticipants { get; set; }
 }

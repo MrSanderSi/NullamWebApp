@@ -5,6 +5,7 @@ namespace NullamWebApp.Web.Models.ApiResponseModels;
 
 public class ParticipantPerson
 {
+	public Guid? Id { get; set; }
 	public required string FirstName { get; set; }
 	public required string LastName { get; set; }
 	public required long IdCode { get; set; }

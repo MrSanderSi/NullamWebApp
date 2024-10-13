@@ -1,15 +1,17 @@
 ﻿@page "/eventdetails/{eventId:Guid}"
-<div class="component-header">
-	<h3>
-		Osavõtjad
-	</h3>
-	<div class="image-container">
-		<img src="images/libled.jpg" />
-	</div>
-</div>
 
+<CascadingValue Value="@(Guid.Parse(EventId))">
 @if (EventWithParticipants != null && !ParticipantViewActive)
 {
+	<div class="component-header">
+		<h3>
+			Osavõtjad
+		</h3>
+		<div class="image-container">
+			<img src="images/libled.jpg" />
+		</div>
+	</div>
+
 	<div class="sections">
 		<div class="section">
 			<div class="section-header">
@@ -46,8 +48,12 @@
 							<tr>
 								<td class="stretched">@(counter.ToString() + ". " + person.FirstName + " " + person.LastName)</td>
 								<td class="stretched">@person.IdCode</td>
-								<td class="stretched" @onclick="() => TriggerSelectedPerson(person)">VAATA</td>
-								<td class="stretched"><a @onclick="() => DeleteParticipantPersonAsync(person)">KUSTUTA</a></td>
+
+								@if (CanModify)
+								{
+									<td class="stretched pointer-cursor" @onclick="() => TriggerSelectedPerson(person)">VAATA</td>
+									<td class="stretched pointer-cursor"><a @onclick="() => DeleteParticipantPersonAsync(person)">KUSTUTA</a></td>
+								}
 							</tr>
 						}
 					}
@@ -60,8 +66,12 @@
 							<tr>
 								<td class="stretched">@(counter.ToString() + ". " + company.CompanyName)</td>
 								<td class="stretched">@company.CompanyRegistryCode</td>
-								<td class="stretched" @onclick="() => TriggerSelectedCompany(company)">VAATA</td>
-								<td class="stretched"><a @onclick="() => DeleteParticipantCompanyAsync(company)">KUSTUTA</a></td>
+
+								@if (CanModify)
+								{
+									<td class="stretched pointer-cursor" @onclick="() => TriggerSelectedCompany(company)">VAATA</td>
+									<td class="stretched pointer-cursor"><a @onclick="() => DeleteParticipantCompanyAsync(company)">KUSTUTA</a></td>
+								}
 							</tr>
 						}
 					}
@@ -69,52 +79,55 @@
 			</table>
 		</div>
 
-		@* TODO: Osaleja lisamise sektsioon
-
-		<div class="section">
-			<div class="section-header">
-				<h4>
-					Osavõtjate lisamine
-				</h4>
+		@if (CanModify)
+		{
+			<div class="section">
+				<div class="section-header">
+					<h4>
+						Osavõtjate lisamine
+					</h4>
+				</div>
+				<table>
+					<tr>
+						<div class="radio-section">
+							<td class="spacer"></td>
+							<td class="radio-choice">
+								<div>
+									<input type="radio" id="Person" name="userType" @onclick="ChoosePerson" checked />
+									<label for="Person">Eraisik</label>
+								</div>
+								<div>
+									<input type="radio" id="Company" name="userType" @onclick="ChooseCompany" />
+									<label for="Company">Ettevõte</label>
+								</div>
+							</td>
+						</div>
+					</tr>
+					<tr>
+						@if (SelectedOption == UserType.Person)
+						{
+						<SelectedPersonView />
+						}
+						else if (SelectedOption == UserType.Company)
+						{
+						<SelectedCompanyView />
+						}
+					</tr>
+				</table>
 			</div>
-			<table>
-				<tr>
-					<td></td>
-					<td>
-						<div>
-							<input type="radio" id="Person" name="userType" @bind-value="SelectedOption" />
-							<label for="Person">Eraisik</label>
-						</div>
-						<div>
-							<input type="radio" id="Company" name="userType" @bind-value="SelectedOption" />
-							<label for="Company">Ettevõte</label>
-						</div>
-					</td>
-				</tr>
-				<tr>
-					@if (SelectedOption == UserType.Person)
-					{
-						<td>Eraisik</td>
-					}
-					else if (SelectedOption == UserType.Company)
-					{
-						<td>Ettevõte</td>
-					}
-				</tr>
-			</table>
-		</div>
-
-		*@
+		}
 	</div>
 }
+
 @if (ParticipantViewActive && SelectedPerson != null)
 {
 	<CascadingValue Value="SelectedPerson">
-		<SelectedPersonView />
+		<EditPersonView />
 	</CascadingValue>
 }else if (ParticipantViewActive && SelectedCompany != null)
 {
 	<CascadingValue Value = "SelectedCompany">
-		<SelectedCompanyView />
+		<EditCompanyView />
 	</CascadingValue>
 }
+</CascadingValue>
