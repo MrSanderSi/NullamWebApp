@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NullamWebApp.Data;
 
@@ -11,9 +12,11 @@ using NullamWebApp.Data;
 namespace NullamWebApp.Data.Migrations
 {
     [DbContext(typeof(NullamDbContext))]
-    partial class NullamDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241014052358_InitialDataPatch")]
+    partial class InitialDataPatch
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,7 +51,7 @@ namespace NullamWebApp.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Address", (string)null);
+                    b.ToTable("Address");
                 });
 
             modelBuilder.Entity("NullamWebApp.Data.Models.Event", b =>
@@ -80,7 +83,7 @@ namespace NullamWebApp.Data.Migrations
 
                     b.HasIndex("AddressId");
 
-                    b.ToTable("Events", (string)null);
+                    b.ToTable("Events");
 
                     b.HasData(
                         new
@@ -118,7 +121,7 @@ namespace NullamWebApp.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ParticipantCompanies", (string)null);
+                    b.ToTable("ParticipantCompanies");
 
                     b.HasData(
                         new
@@ -161,7 +164,7 @@ namespace NullamWebApp.Data.Migrations
 
                     b.HasIndex("ParticipantPersonId");
 
-                    b.ToTable("Participants", (string)null);
+                    b.ToTable("Participants");
 
                     b.HasData(
                         new
@@ -201,7 +204,7 @@ namespace NullamWebApp.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ParticipantPeople", (string)null);
+                    b.ToTable("ParticipantPeople");
 
                     b.HasData(
                         new

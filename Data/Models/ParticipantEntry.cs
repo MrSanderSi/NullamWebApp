@@ -16,7 +16,7 @@ public class ParticipantEntry
     public PaymentType PaymentType { get; set; }
     public string? AdditionalInfo { get; set; }
     public int ParticipantCount { get; set; }
-    public virtual required Event Event { get; set; }
+    public virtual Event Event { get; set; }
     public virtual ParticipantPerson? Person { get; set; }
     public virtual ParticipantCompany? Company { get; set; }
 }
